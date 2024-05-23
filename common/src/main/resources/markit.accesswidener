@@ -1,0 +1,3 @@
+accessWidener v2 named
+accessible field net/minecraft/client/gui/screens/inventory/BookEditScreen$LineInfo style Lnet/minecraft/network/chat/Style;
+accessible class net/minecraft/client/gui/screens/inventory/BookEditScreen$DisplayCache

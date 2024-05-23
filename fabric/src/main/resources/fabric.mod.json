@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "markit",
+  "version": "${version}",
+
+  "name": "markit",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "BSD 3-Clause (NewBSD) License",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.derfruhling.minecraft.markit.fabric.MarkitFabric"
+    ]
+  },
+  "mixins": [
+    "markit.mixins.json",
+    "markit-common.mixins.json"
+  ],
+  "accessWidener": "markit.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": ">=1.20.1"
+  }
+}
