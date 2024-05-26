@@ -4,14 +4,21 @@
   "version": "${version}",
 
   "name": "markit",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "description": "Better chat formatting for Minecraft",
+  "authors": [
+    "der_frühling"
+  ],
+  "contact": {
+    "email": "works-on-my-machine@der-fruhling.mozmail.com",
+    "sources": "https://github.com/der-fruhling-entertainment/markit",
+    "issues": "https://github.com/der-fruhling-entertainment/markit/issues",
+    "homepage": "https://github.com/der-fruhling-entertainment/markit"
+  },
 
   "license": "BSD 3-Clause (NewBSD) License",
   "icon": "icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": [
       "net.derfruhling.minecraft.markit.fabric.MarkitFabric"
@@ -23,7 +30,6 @@
   ],
   "accessWidener": "markit.accesswidener",
   "depends": {
-    "fabricloader": ">=0.15.11",
-    "minecraft": ">=1.20.1"
+    "minecraft": "*"
   }
 }
