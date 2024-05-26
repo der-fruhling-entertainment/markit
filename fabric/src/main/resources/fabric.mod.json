@@ -25,7 +25,6 @@
     ]
   },
   "mixins": [
-    "markit.mixins.json",
     "markit-common.mixins.json"
   ],
   "accessWidener": "markit.accesswidener",
