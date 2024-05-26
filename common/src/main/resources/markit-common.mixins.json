@@ -3,11 +3,9 @@
   "minVersion": "0.8",
   "package": "net.derfruhling.minecraft.markit.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "StringDecomposerMixin"
-  ],
   "client": [
     "BookEditScreenMixin",
+    "StringDecomposerMixin",
     "CommandSuggestionsMixin"
   ],
   "injectors": {
