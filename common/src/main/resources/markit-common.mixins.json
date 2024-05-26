@@ -8,8 +8,7 @@
   ],
   "client": [
     "BookEditScreenMixin",
-    "CommandSuggestionsMixin",
-    "StringSplitterMixin"
+    "CommandSuggestionsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
