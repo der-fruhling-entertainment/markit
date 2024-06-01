@@ -22,6 +22,11 @@ public class BookEditScreenMixin {
         return instance.width(FormattedText.of(string, lines.get(k).style));
     }
 
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I", ordinal = 1))
+    public int wrapDisabledForAuthor(GuiGraphics instance, Font arg, Component arg2, int i, int j, int k, boolean bl, Operation<Integer> original) {
+        return MarkdownHam.disabled(() -> original.call(instance, arg, arg2, i, j, k, bl));
+    }
+
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I", ordinal = 3))
     public int wrap(GuiGraphics instance, Font arg, Component arg2, int i, int j, int k, boolean bl, Operation<Integer> original) {
         return MarkdownHam.divertToEditor(() -> original.call(instance, arg, arg2, i, j, k, bl));
