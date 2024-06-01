@@ -35,13 +35,17 @@ public class MarkdownHam {
         int length = string.length();
         Style style = styleKeeper.get();
 
+        // filter here by whether the part is probably the username of somebody
+        // this is done because usernames can contain underscores
+        boolean applyMarkdownHam = !(original.getClickEvent() != null || original.getHoverEvent() != null || original.getInsertion() != null);
+
         for (int i = offset; i < length; ++i) {
             char c1 = string.charAt(i);
             char c2;
 
             // Minecraft appends an underscore for the little bar in text fields
             // Make sure that it's not interpreted as a marker
-            if (string.length() > 1 && (c1 == '*' || c1 == '_' || ((c1 == '~' || c1 == '|') && i + 1 < length && string.charAt(i + 1) == c1))) {
+            if (applyMarkdownHam && string.length() > 1 && (c1 == '*' || c1 == '_' || ((c1 == '~' || c1 == '|') && i + 1 < length && string.charAt(i + 1) == c1))) {
                 var value = feeder.feedChar(MARKER_STYLE, sink, i, c1);
                 if (i + 1 >= length || c1 != string.charAt(i + 1)) {
                     // implied to be * or _
@@ -55,10 +59,7 @@ public class MarkdownHam {
                 }
                 styleKeeper.set(style);
                 if (!value) return false;
-                continue;
-            }
-
-            if (c1 == '§') {
+            } else if (c1 == '§') {
                 if (i + 1 >= length) {
                     return true;
                 }
@@ -121,13 +122,17 @@ public class MarkdownHam {
         int length = string.length();
         Style style = styleKeeper.get();
 
+        // filter here by whether the part is probably the username of somebody
+        // this is done because usernames can contain underscores
+        boolean applyMarkdownHam = !(original.getClickEvent() != null || original.getHoverEvent() != null || original.getInsertion() != null);
+
         for (int i = offset; i < length; ++i) {
             char c1 = string.charAt(i);
             char c2;
 
             // Minecraft appends an underscore for the little bar in text fields
             // Make sure that it's not interpreted as a marker
-            if(string.length() > 1 && (c1 == '*' || c1 == '_' || ((c1 == '~' || c1 == '|') && i + 1 < length && string.charAt(i + 1) == c1))) {
+            if(applyMarkdownHam && string.length() > 1 && (c1 == '*' || c1 == '_' || ((c1 == '~' || c1 == '|') && i + 1 < length && string.charAt(i + 1) == c1))) {
                 if (i + 1 >= length || c1 != string.charAt(i + 1)) {
                     // implied to be * or _
                     style = style.withItalic(!style.isItalic());
