@@ -15,6 +15,7 @@ public class MarkdownHam {
     private static final Style MARKER_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
 
     private static final ThreadLocal<Boolean> DIVERT_TO_EDITOR_MODE = ThreadLocal.withInitial(() -> false);
+    private static final ThreadLocal<Boolean> DIVERT_DISABLED = ThreadLocal.withInitial(() -> false);
 
     static {
         // these styles are optimized away as they are both single-char and do the same thing
@@ -37,7 +38,7 @@ public class MarkdownHam {
 
         // filter here by whether the part is probably the username of somebody
         // this is done because usernames can contain underscores
-        boolean applyMarkdownHam = !(original.getClickEvent() != null || original.getHoverEvent() != null || original.getInsertion() != null);
+        boolean applyMarkdownHam = !(DIVERT_DISABLED.get() || original.getClickEvent() != null || original.getHoverEvent() != null || original.getInsertion() != null);
 
         for (int i = offset; i < length; ++i) {
             char c1 = string.charAt(i);
@@ -124,7 +125,7 @@ public class MarkdownHam {
 
         // filter here by whether the part is probably the username of somebody
         // this is done because usernames can contain underscores
-        boolean applyMarkdownHam = !(original.getClickEvent() != null || original.getHoverEvent() != null || original.getInsertion() != null);
+        boolean applyMarkdownHam = !(DIVERT_DISABLED.get() || original.getClickEvent() != null || original.getHoverEvent() != null || original.getInsertion() != null);
 
         for (int i = offset; i < length; ++i) {
             char c1 = string.charAt(i);
@@ -197,6 +198,15 @@ public class MarkdownHam {
             return r.get();
         } finally {
             DIVERT_TO_EDITOR_MODE.set(false);
+        }
+    }
+
+    public static <T> T disabled(Supplier<T> r) {
+        try {
+            DIVERT_DISABLED.set(true);
+            return r.get();
+        } finally {
+            DIVERT_DISABLED.set(false);
         }
     }
 }
