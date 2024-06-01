@@ -3,6 +3,7 @@ package net.derfruhling.minecraft.markit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import org.jetbrains.annotations.NotNull;
 
@@ -208,5 +209,45 @@ public class MarkdownHam {
         } finally {
             DIVERT_DISABLED.set(false);
         }
+    }
+
+    public static FormattedCharSequence createCharSequence(String string, Style original) {
+        return formattedCharSink -> {
+            MarkdownHam.iterateFormatted(
+                    (style, sink, m, c) -> {
+                        if (Character.isSurrogate(c)) {
+                            return sink.accept(m, style, 65533);
+                        }
+                        return sink.accept(m, style, c);
+                    },
+                    string,
+                    0,
+                    new Keeper.Value<>(original),
+                    original,
+                    formattedCharSink
+            );
+
+            return true;
+        };
+    }
+
+    public static FormattedCharSequence createEditorCharSequence(String string, Style original) {
+        return formattedCharSink -> {
+            MarkdownHam.iterateFormattedEditor(
+                    (style, sink, m, c) -> {
+                        if (Character.isSurrogate(c)) {
+                            return sink.accept(m, style, 65533);
+                        }
+                        return sink.accept(m, style, c);
+                    },
+                    string,
+                    0,
+                    new Keeper.Value<>(original),
+                    original,
+                    formattedCharSink
+            );
+
+            return true;
+        };
     }
 }

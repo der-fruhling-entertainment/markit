@@ -9,6 +9,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -28,8 +30,13 @@ public class BookEditScreenMixin {
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I", ordinal = 3))
-    public int wrap(GuiGraphics instance, Font arg, Component arg2, int i, int j, int k, boolean bl, Operation<Integer> original) {
+    public int wrapBodyText(GuiGraphics instance, Font arg, Component arg2, int i, int j, int k, boolean bl, Operation<Integer> original) {
         return MarkdownHam.divertToEditor(() -> original.call(instance, arg, arg2, i, j, k, bl));
+    }
+
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/FormattedCharSequence;forward(Ljava/lang/String;Lnet/minecraft/network/chat/Style;)Lnet/minecraft/util/FormattedCharSequence;"))
+    public FormattedCharSequence wrapTitleText(String string, Style style) {
+        return MarkdownHam.createEditorCharSequence(string, style);
     }
 
     @WrapOperation(method = "getDisplayCache", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/BookEditScreen;rebuildDisplayCache()Lnet/minecraft/client/gui/screens/inventory/BookEditScreen$DisplayCache;"))
