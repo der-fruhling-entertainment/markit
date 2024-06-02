@@ -29,6 +29,6 @@
   ],
   "accessWidener": "markit.accesswidener",
   "depends": {
-    "minecraft": "*"
+    "minecraft": ">=1.20"
   }
 }
