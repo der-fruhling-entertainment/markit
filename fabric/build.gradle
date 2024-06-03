@@ -1,5 +1,6 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 architectury {
@@ -75,4 +76,16 @@ publishing {
     repositories {
         // Add repositories to publish to here.
     }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") ?: ""
+    projectId = 'mark-it'
+    versionNumber = rootProject.mod_version + "+fabric"
+    versionType = rootProject.modrinth_version_type
+    uploadFile = remapJar
+    gameVersions = ['1.20', '1.20.1', '1.20.2', '1.20.3', '1.20.4', '1.20.5', '1.20.6']
+    loaders = ['fabric']
+
+    dependencies { /* none */ }
 }
