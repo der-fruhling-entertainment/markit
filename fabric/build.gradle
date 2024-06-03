@@ -86,6 +86,7 @@ modrinth {
     uploadFile = remapJar
     gameVersions = ['1.20', '1.20.1', '1.20.2', '1.20.3', '1.20.4', '1.20.5', '1.20.6']
     loaders = ['fabric']
+    changelog = rootProject.file("CHANGELOG.md").getText()
 
     dependencies { /* none */ }
 }
