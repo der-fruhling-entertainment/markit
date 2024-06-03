@@ -5,8 +5,10 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "BookEditScreenMixin",
-    "StringDecomposerMixin",
-    "CommandSuggestionsMixin"
+    "ChatListenerMixin",
+    "CommandSuggestionsMixin",
+    "GuiMixin",
+    "StringDecomposerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
