@@ -6,7 +6,9 @@
   "client": [
     "BookEditScreenMixin",
     "ChatListenerMixin",
+    "ClientSuggestionProviderMixin",
     "CommandSuggestionsMixin",
+    "EditBoxMixin",
     "GuiMixin",
     "StringDecomposerMixin"
   ],

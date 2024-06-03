@@ -19,9 +19,6 @@ public class MarkdownHam {
     private static final ThreadLocal<Boolean> DIVERT_DISABLED = ThreadLocal.withInitial(() -> false);
 
     static {
-        // these styles are optimized away as they are both single-char and do the same thing
-        // mk$STYLES.put("*", s -> s.withItalic(!s.isItalic()));
-        // mk$STYLES.put("_", s -> s.withItalic(!s.isItalic()));
         STYLES.put("**", (s, isEditor) -> s.withBold(!s.isBold()));
         STYLES.put("__", (s, isEditor) -> s.withUnderlined(!s.isUnderlined()));
         STYLES.put("~~", (s, isEditor) -> s.withStrikethrough(!s.isStrikethrough()));
@@ -47,15 +44,31 @@ public class MarkdownHam {
 
             // Minecraft appends an underscore for the little bar in text fields
             // Make sure that it's not interpreted as a marker
-            if (applyMarkdownHam && string.length() > 1 && (c1 == '*' || c1 == '_' || ((c1 == '~' || c1 == '|') && i + 1 < length && string.charAt(i + 1) == c1))) {
+            if(applyMarkdownHam && string.length() > 1 && (c1 == '*' || c1 == '_' || (c1 == '\\' && i + 1 < length) || ((c1 == '~' || c1 == '|') && i + 1 < length && string.charAt(i + 1) == c1))) {
                 var value = feeder.feedChar(MARKER_STYLE, sink, i, c1);
-                if (i + 1 >= length || c1 != string.charAt(i + 1)) {
-                    // implied to be * or _
+                if(c1 == '\\' && i + 1 < length) {
+                    c2 = string.charAt(i + 1);
+                    value &= feeder.feedChar(style, sink, i + 1, c2);
+
+                    ++i;
+
+                    if(string.length() > i + 1) {
+                        char c3 = string.charAt(i + 1);
+                        // allow escaping a whole marker at once
+                        if(STYLES.containsKey(String.valueOf(c2) + c3)) {
+                            value &= feeder.feedChar(style, sink, i + 1, c3);
+                            ++i;
+                        }
+                    }
+                } else if ((c1 == '*' || c1 == '_') && (i + 1 >= length || string.charAt(i + 1) != c1)) {
                     style = style.withItalic(!style.isItalic());
-                } else {
+                } else if (c1 != '\\') {
                     c2 = string.charAt(i + 1);
                     value &= feeder.feedChar(MARKER_STYLE, sink, i + 1, c2);
-                    style = STYLES.get(String.valueOf(c1) + c2).apply(style, true);
+                    var styleToApply = STYLES.get(String.valueOf(c1) + c2);
+                    if(styleToApply != null) {
+                        style = styleToApply.apply(style, true);
+                    }
 
                     ++i;
                 }
@@ -134,13 +147,29 @@ public class MarkdownHam {
 
             // Minecraft appends an underscore for the little bar in text fields
             // Make sure that it's not interpreted as a marker
-            if(applyMarkdownHam && string.length() > 1 && (c1 == '*' || c1 == '_' || ((c1 == '~' || c1 == '|') && i + 1 < length && string.charAt(i + 1) == c1))) {
-                if (i + 1 >= length || c1 != string.charAt(i + 1)) {
-                    // implied to be * or _
-                    style = style.withItalic(!style.isItalic());
-                } else {
+            if(applyMarkdownHam && string.length() > 1 && (c1 == '*' || c1 == '_' || (c1 == '\\' && i + 1 < length) || ((c1 == '~' || c1 == '|') && i + 1 < length && string.charAt(i + 1) == c1))) {
+                if(c1 == '\\' && i + 1 < length) {
                     c2 = string.charAt(i + 1);
-                    style = STYLES.get(String.valueOf(c1) + c2).apply(style, false);
+                    feeder.feedChar(style, sink, i, c2);
+
+                    ++i;
+
+                    if(string.length() > i + 1) {
+                        char c3 = string.charAt(i + 1);
+                        // allow escaping a whole marker at once
+                        if(STYLES.containsKey(String.valueOf(c2) + c3)) {
+                            feeder.feedChar(style, sink, i, c3);
+                            i++;
+                        }
+                    }
+                } else if ((c1 == '*' || c1 == '_') && (i + 1 >= length || string.charAt(i + 1) != c1)) {
+                    style = style.withItalic(!style.isItalic());
+                } else if(c1 != '\\') {
+                    c2 = string.charAt(i + 1);
+                    var styleToApply = STYLES.get(String.valueOf(c1) + c2);
+                    if(styleToApply != null) {
+                        style = styleToApply.apply(style, true);
+                    }
 
                     ++i;
                 }
