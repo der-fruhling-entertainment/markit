@@ -20,7 +20,7 @@ import java.util.List;
 @Mixin(BookEditScreen.class)
 public class BookEditScreenMixin {
     @Redirect(method = "rebuildDisplayCache", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;width(Ljava/lang/String;)I"))
-    public int getLineWidth(Font instance, String string, @Local(index = 5) List<BookEditScreen.LineInfo> lines, @Local(index = 12) int k) {
+    public int getLineWidth(Font instance, String string, @Local(ordinal = 0) List<BookEditScreen.LineInfo> lines, @Local(index = 12) int k) {
         return instance.width(FormattedText.of(string, lines.get(k).style));
     }
 
